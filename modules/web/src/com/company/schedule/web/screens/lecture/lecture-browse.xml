@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<window xmlns="http://schemas.haulmont.com/cuba/screen/window.xsd"
+        xmlns:c="http://schemas.haulmont.com/cuba/screen/jpql_condition.xsd"
+        caption="msg://lectureBrowse.caption"
+        focusComponent="lecturesTable"
+        messagesPack="com.company.schedule.web.screens.lecture">
+    <data readOnly="true">
+        <collection id="lecturesDc"
+                    class="com.company.schedule.entity.Lecture">
+            <view extends="_local">
+                <property name="teacher" view="_minimal">
+                    <property name="subject"/>
+                </property>
+                <property name="endDate"/>
+            </view>
+            <loader id="lecturesDl">
+                <query>
+                    <![CDATA[select e from schedule_Lecture e]]>
+                </query>
+            </loader>
+        </collection>
+    </data>
+    <dialogMode height="auto"
+                width="auto"/>
+    <facets>
+        <editorScreen id="lectureEditDialog" entityClass="com.company.schedule.entity.Lecture" container="lecturesDc"
+                      screenClass="com.company.schedule.web.screens.lecture.LectureEdit" openMode="DIALOG"
+                      editMode="EDIT"/>
+    </facets>
+    <layout expand="lecturesTabSheet"
+            spacing="true">
+        <filter id="filter"
+                applyTo="lecturesTable"
+                dataLoader="lecturesDl">
+            <properties include=".*"/>
+        </filter>
+        <tabSheet id="lecturesTabSheet">
+            <tab id="calendarTab" caption="msg://calendarTab.caption" margin="true,false,false,false" spacing="true"
+                 expand="lecturesCalendar">
+                <calendar id="lecturesCalendar" dataContainer="lecturesDc" startDateProperty="startDate"
+                          endDateProperty="endDate" captionProperty="topic" descriptionProperty="description"
+                          firstVisibleHourOfDay="8" lastVisibleHourOfDay="19" navigationButtonsVisible="true"/>
+            </tab>
+            <tab id="tableTab" caption="msg://tableTab.caption" expand="lecturesTable">
+                <groupTable id="lecturesTable"
+                                    width="100%"
+                                    dataContainer="lecturesDc">
+                    <actions>
+                        <action id="create" type="create"/>
+                        <action id="edit" type="edit"/>
+                        <action id="remove" type="remove"/>
+                    </actions>
+                    <columns>
+                        <column id="topic"/>
+                        <column id="startDate"/>
+                        <column id="duration"/>
+                        <column id="teacher"/>
+                        <column id="description"/>
+                        <column id="endDate"/>
+                    </columns>
+                    <rowsCount/>
+                    <buttonsPanel id="buttonsPanel"
+                                  alwaysVisible="true">
+                        <button id="createBtn" action="lecturesTable.create"/>
+                        <button id="editBtn" action="lecturesTable.edit"/>
+                        <button id="removeBtn" action="lecturesTable.remove"/>
+                    </buttonsPanel>
+                </groupTable>
+            </tab>
+        </tabSheet>
+        <hbox id="lookupActions" spacing="true" visible="false">
+            <button action="lookupSelectAction"/>
+            <button action="lookupCancelAction"/>
+        </hbox>
+    </layout>
+</window>
